@@ -1,0 +1,25 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "recording employees in a company",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcelamejiao/Employee-Tracker.git"
+  },
+  "author": "Marcela Mejia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcelamejiao/Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/marcelamejiao/Employee-Tracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.3.3"
+  }
+}
