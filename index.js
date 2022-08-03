@@ -38,7 +38,9 @@ function showMenu() {
   inquirer.prompt(menuQuestion)
   .then(function(menuAnswer){
       if(menuAnswer.menu === "View all Departments"){
-
+        db.query('SELECT * FROM department', function (err, results) {
+          console.log(results);
+        });
       } else if (menuAnswer.menu === "View all Roles" ) {
       
       } else if (menuAnswer.menu === "View all Employees" ) {
@@ -75,8 +77,3 @@ function init() {
 }
 
 init();
-
-// db.query('SELECT * FROM departments', function (err, results) {
-//   console.log(results);
-// }); 
-  
