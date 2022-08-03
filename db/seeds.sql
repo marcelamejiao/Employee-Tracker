@@ -19,7 +19,7 @@ VALUES  ("Marcela", "Mejia", 3, null),
         ("Ruben", "Funai", 4, 1),
         ("Angie", "Nino", 1, null),
         ("Ruth", "Ortiz", 2, 3),
-        ("Satiago", "Villamizar", 5, null),
+        ("Santiago", "Villamizar", 5, null),
         ("Alfonso", "Jimenez", 6, 5),
         ("Mercedes", "Videme", 7, null),
         ("Patricia", "Idarraga", 8, 7);

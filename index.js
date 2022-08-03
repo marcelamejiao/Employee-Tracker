@@ -1,6 +1,7 @@
 // Import and require mysql2
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
+require('console.table');
 
 // Connect to database
 const db = mysql.createConnection(
@@ -39,12 +40,36 @@ function showMenu() {
   .then(function(menuAnswer){
       if(menuAnswer.menu === "View all Departments"){
         db.query('SELECT * FROM department', function (err, results) {
-          console.log(results);
+          console.table(results);
+          showMenu();
         });
       } else if (menuAnswer.menu === "View all Roles" ) {
-      
+        db.query('SELECT role.id, role.title, department.name AS department, role.salary ' + 
+                  'FROM role ' + 
+                  'JOIN department ON role.department_id = department.id;', 
+                  function (err, results) {
+                    if (err) {
+                      console.log(err);
+                    }
+                    console.table(results);
+                    showMenu();
+                  }
+        );      
       } else if (menuAnswer.menu === "View all Employees" ) {
+        db.query('SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT (manager.first_name, " " , manager.last_name) AS manager '  + 
+                  'FROM employee ' + 
+                  'LEFT JOIN employee AS manager ON employee.manager_id = manager.id ' +
+                  'JOIN role ON employee.role_id = role.id ' +
+                  'JOIN department ON role.department_id = department.id;',
+                  function (err, results) {
+                    if (err) {
+                      console.log(err);
+                    }
 
+                    console.table(results);
+                    showMenu();
+                  }
+        );
       } else if (menuAnswer.menu ===  "Add a Deparment" ) {
       
       } else if (menuAnswer.menu === "Add a Role" ) {
