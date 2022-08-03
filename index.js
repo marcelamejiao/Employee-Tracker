@@ -43,6 +43,20 @@ const addDepartmentQuestions = [
   },
 ];
 
+const addRoleQuestions = [
+  {
+      type: 'input',
+      name: 'name',
+      message: "What is the name of the role?",
+  },
+  {
+    type: 'input',
+    name: 'salary',
+    message: "What is the salary of the role?",
+  },
+  // We will add the "Which department" question as we use these questions because the departments can change
+];
+
 function showMenu() {
   inquirer.prompt(menuQuestion)
   .then(function(menuAnswer){
@@ -92,6 +106,41 @@ function showMenu() {
             );
           });
       } else if (menuAnswer.menu === "Add a Role" ) {
+        // First let's get what departments we have so we can ask the "which department" question
+        db.query('SELECT name FROM department', function (err, results) {
+          const departmentQuestion = {
+            type: 'list',
+            choices: results.map(function (department) { return department.name; }),
+            name: 'department',
+            message: 'Which department does the role belong to?',
+          };
+
+          // Add our temporary question to the add role questions
+          const questions = [
+            ...addRoleQuestions,
+            departmentQuestion
+          ];
+          
+          inquirer.prompt(questions)
+            .then(function (answers) {
+              db.query(`SELECT id FROM department WHERE name = "${answers.department}"`,
+                function (err, results) {
+                  if (err) {
+                    console.log(err);
+                  }
+                  const departmentId = results[0].id;
+                  db.query(`INSERT INTO role (title, salary, department_id) VALUES ("${answers.name}", "${answers.salary}", "${departmentId}")`, 
+                    function (err, results) {
+                      if (err) {
+                        console.log(err);
+                      }
+                      showMenu();
+                    }
+                  );
+                });
+              }
+            );
+        });
 
       } else if (menuAnswer.menu === "Add an Employee" ) {
 
