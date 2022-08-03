@@ -35,6 +35,14 @@ const menuQuestion = [
   },
 ];
 
+const addDepartmentQuestions = [
+  {
+      type: 'input',
+      name: 'name',
+      message: "What is the name of the department?",
+  },
+];
+
 function showMenu() {
   inquirer.prompt(menuQuestion)
   .then(function(menuAnswer){
@@ -71,7 +79,18 @@ function showMenu() {
                   }
         );
       } else if (menuAnswer.menu ===  "Add a Deparment" ) {
-      
+        inquirer.prompt(addDepartmentQuestions)
+          .then(function (departmentAnswer) {
+            const departmentName = departmentAnswer.name;
+            db.query(`INSERT INTO department (name) VALUES ("${departmentName}")`,
+              function (err, results) {
+                if (err) {
+                  console.log(err);
+                }
+                showMenu();
+              }
+            );
+          });
       } else if (menuAnswer.menu === "Add a Role" ) {
 
       } else if (menuAnswer.menu === "Add an Employee" ) {
