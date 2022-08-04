@@ -207,7 +207,40 @@ function showMenu() {
               });
           });
       } else if (menuAnswer.menu === "Update an Employee role" ) {
+        const employeePromise = db.promise().query("SELECT id, CONCAT(first_name, ' ', last_name) AS employee FROM employee");
+        const rolePromise = db.promise().query("SELECT id, title FROM role");
+        Promise.all([employeePromise, rolePromise])
+        .then(function([employeeResults, roleResults]){
+          const roles = roleResults[0];
+          const employees = employeeResults[0];
 
+          const employeeQuestion = {
+            type: 'list',
+            choices: [
+              ...employees.map(function (employee) { return { name: employee.employee, value: employee.id }; })
+            ],
+            name: 'employee',
+            message: 'Which employee\'s role do you want to update?',
+          };
+
+          const roleQuestion = {
+            type: 'list',
+            choices: [
+              ...roles.map(function (role) { return { name: role.title, value: role.id }; })
+            ],
+            name: 'role',
+            message: 'Which role do you want to assign the selected employee?',
+          };
+
+          inquirer.prompt([employeeQuestion, roleQuestion])
+            .then(function(answers) {
+              db.promise().query(`UPDATE employee SET role_id = ${answers.role} WHERE id = ${answers.employee};`)
+              .then(function () {
+                console.log("Updated employee's role");
+                showMenu();
+              });
+            });
+        });
       } else {
         // We are finished, so exit
         process.exit();
