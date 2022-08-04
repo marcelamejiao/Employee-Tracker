@@ -115,6 +115,7 @@ function showMenu() {
                 if (err) {
                   console.log(err);
                 }
+                console.log(`Added ${departmentName} to the database`)
                 showMenu();
               }
             );
@@ -148,6 +149,7 @@ function showMenu() {
                       if (err) {
                         console.log(err);
                       }
+                      console.log(`Added ${answers.name} to the database`)
                       showMenu();
                     }
                   );
@@ -199,6 +201,7 @@ function showMenu() {
                 `(first_name, last_name, role_id, manager_id) ` + 
                 `VALUES ("${answers.firstName}", "${answers.lastName}", ${answers.role}, ${answers.manager})`)
                   .then(function() {
+                    console.log(`Added ${answers.firstName} ${answers.lastName} to the database`)
                     showMenu();
                   });
               });
