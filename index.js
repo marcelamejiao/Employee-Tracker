@@ -57,6 +57,20 @@ const addRoleQuestions = [
   // We will add the "Which department" question as we use these questions because the departments can change
 ];
 
+const addEmployeeQuestions = [
+  {
+    type: 'input',
+    name: 'firstName',
+    message: "What is the the employee's first name?",
+  },
+  {
+    type: 'input',
+    name: 'lastName',
+    message: "What is the the employee's last name?",
+  },
+  // We will add the "which role" and "which manager" question later
+];
+
 function showMenu() {
   inquirer.prompt(menuQuestion)
   .then(function(menuAnswer){
@@ -143,7 +157,52 @@ function showMenu() {
         });
 
       } else if (menuAnswer.menu === "Add an Employee" ) {
+        const rolePromise = db.promise().query("SELECT id, title FROM role");
+        const managerPromise = db.promise().query("SELECT id, CONCAT(first_name, ' ', last_name) AS manager FROM employee");
 
+        Promise.all([rolePromise, managerPromise])
+          .then(function ([roleResults, managerResults]) {
+            const roles = roleResults[0];
+            const managers = managerResults[0];
+
+            const employeeRoleQuestion = {
+              type: 'list',
+              choices: roles.map(function (role) { return { name: role.title, value: role.id }; }),
+              name: 'role',
+              message: 'What is the employee\'s role?',
+            };
+
+            const managerQuestion = {
+              type: 'list',
+              choices: [
+                {
+                  name: "None",
+                  value: null
+                },
+                ...managers.map(function (manager) { return { name: manager.manager, value: manager.id }; })
+              ],
+              name: 'manager',
+              message: 'Who is the employee\'s manager?',
+            };
+
+            // Add our temporary question to the add role and manager questions
+            const questions = [
+              ...addEmployeeQuestions,
+              employeeRoleQuestion,
+              managerQuestion,
+            ];
+
+            inquirer.prompt(questions)
+              .then(function (answers) {
+                // Save employee in DB
+                db.promise().query(`INSERT INTO employee ` + 
+                `(first_name, last_name, role_id, manager_id) ` + 
+                `VALUES ("${answers.firstName}", "${answers.lastName}", ${answers.role}, ${answers.manager})`)
+                  .then(function() {
+                    showMenu();
+                  });
+              });
+          });
       } else if (menuAnswer.menu === "Update an Employee role" ) {
 
       } else {
