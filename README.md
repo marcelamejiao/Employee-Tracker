@@ -2,7 +2,7 @@
 
 ### **This project was created as a command-line application to manage a company's employee database, using Node.js, Inquirer, and MySQL.** 
 
-### **Helping users to easily view and interact with information stored in databases:  "Content Management Systems (CMS)".**.
+### **Helping users to easily view and interact with information stored in databases:  "Content Management Systems (CMS)".**
 
 ### **This application allows  the user to view and manage the departments, roles, and employees in a company.**
 
